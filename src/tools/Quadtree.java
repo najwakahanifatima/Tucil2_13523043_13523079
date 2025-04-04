@@ -1,3 +1,5 @@
+package tools;
+
 public class Quadtree {
     private final int method;
     private final double threshold;

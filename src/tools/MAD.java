@@ -1,3 +1,5 @@
+package tools;
+
 public class MAD {
     public static double computeMAD(int[][] red, int[][] green, int[][] blue){
         double redMAD = computeMADCanal(red);

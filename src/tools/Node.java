@@ -1,16 +1,22 @@
+package tools;
+
 public class Node {
-    private double value; //mean intensity
-    private final double width;
-    private final double height;
+    private int redValue; //mean intensity
+    private int greenValue;
+    private int blueValue;
+    private final int width;
+    private final int height;
     private final Point pos;
-    private boolean isLeaf;
+    private boolean isLeaf; //true if leaf node, false if not                                   
     private Node topLeft;
     private Node topRight;
     private Node botLeft;
     private Node botRight;
 
     public Node(){
-        this.value = 0;
+        this.redValue = 0;
+        this.greenValue = 0;
+        this.blueValue = 0;
         this.width = 0;
         this.height = 0;
         this.pos = null;
@@ -21,8 +27,10 @@ public class Node {
         this.botRight = null;
     }
 
-    public Node(double _value, boolean _isLeaf, int _row, int _col, double _width, double _height){
-        this.value = _value;
+    public Node(int _redValue, int _greenValue, int _blueValue, boolean _isLeaf, int _row, int _col, int _height, int _width){
+        this.redValue = _redValue;
+        this.greenValue = _greenValue;
+        this.blueValue = _blueValue;
         this.isLeaf = _isLeaf;
         Point _pos = new Point(_row, _col);
         this.pos = _pos;
@@ -34,8 +42,10 @@ public class Node {
         this.botRight = null;
     }
 
-    public Node (double _value, boolean _isLeaf, int _row, int _col, double _width, double _height, Node _topLeft, Node _topRight, Node _botLeft, Node _botRight){
-        this.value = _value;
+    public Node (int _redValue, int _greenValue, int _blueValue, boolean _isLeaf, int _row, int _col, int _height, int _width, Node _topLeft, Node _topRight, Node _botLeft, Node _botRight){
+        this.redValue = _redValue;
+        this.greenValue = _greenValue;
+        this.blueValue = _blueValue;
         this.isLeaf = _isLeaf;
         Point _pos = new Point(_row, _col);
         this.pos = _pos;
@@ -47,8 +57,16 @@ public class Node {
         this.botRight = _botRight;
     }
 
-    public void setValue(double newValue){
-        this.value = newValue;
+    public void setRedValue(int newValue){
+        this.redValue = newValue;
+    }
+
+    public void setGreenValue(int newValue){
+        this.greenValue = newValue;
+    }
+
+    public void setBlueValue(int newValue){
+        this.blueValue = newValue;
     }
 
     public void setIsLeaf(boolean newIsLeaf){
@@ -71,8 +89,16 @@ public class Node {
         this.botRight = newBotRight;
     }
 
-    public double getValue(){
-        return this.value;
+    public int getRedValue(){
+        return this.redValue;
+    }
+
+    public int getGreenValue(){
+        return this.greenValue;
+    }
+
+    public int getBlueValue(){
+        return this.blueValue;
     }
     
     public boolean getIsLeaf(){
@@ -99,7 +125,7 @@ public class Node {
         return this.pos;
     }
 
-    public double getArea(){
+    public int getArea(){
         return this.height * this.width;
     }
 }

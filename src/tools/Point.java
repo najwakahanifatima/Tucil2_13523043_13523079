@@ -1,3 +1,5 @@
+package tools;
+
 public class Point {
     public final int row;
     public final int col;

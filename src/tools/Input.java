@@ -34,7 +34,7 @@ public class Input {
 
     public static int readInputErrorMethod(Scanner scanner) {
         String[] errorMethods = { "Variance", "Mean Absolute Deviation", "Max Pixel Difference", "Entropy" };
-        int choice = 0;
+        int choice;
     
         while (true) {
             System.out.println("=================================================================");
@@ -63,7 +63,7 @@ public class Input {
     }
     
     public static boolean isImageFile(String fileName) {
-        String[] imageExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+        String[] imageExtensions = { ".jpg", ".jpeg", ".png"};
         for (String extension : imageExtensions) {
             if (fileName.toLowerCase().endsWith(extension)) {
                 return true;

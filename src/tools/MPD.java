@@ -1,4 +1,4 @@
-package tools;
+package errorMeasurement;
 
 public class MPD {
     public static double computeMPD(int[][] red, int[][] green, int[][] blue, int rowTL, int colTL, int w, int h){
@@ -13,7 +13,11 @@ public class MPD {
         if (matrix == null || w == 0 || h == 0) {
             return 0.0;
         }
-        
+        if (rowTL < 0 || colTL < 0 || 
+            rowTL + h > matrix.length || 
+            colTL + w > matrix[0].length) {
+            throw new IllegalArgumentException("Requested submatrix is out of bounds");
+        }
         int[] result = findMinMax(matrix, rowTL, colTL, rowTL + h - 1, colTL + w - 1);
         int min = result[0];
         int max = result[1];
@@ -22,6 +26,9 @@ public class MPD {
     }
 
     private static int[] findMinMax(int[][] matrix, int startRow, int startCol, int endRow, int endCol) {
+        if (startRow > endRow || startCol > endCol) {
+            return new int[] { Integer.MAX_VALUE, Integer.MIN_VALUE };
+        }
         if (startRow == endRow && startCol == endCol) {
             return new int[] { matrix[startRow][startCol], matrix[startRow][startCol] };
         }

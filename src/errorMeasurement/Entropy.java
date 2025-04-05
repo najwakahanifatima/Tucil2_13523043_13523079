@@ -12,7 +12,6 @@ public class Entropy{
     }
 
     public static double computeEntropyCanal(int[][] matrix, int rowTL, int colTL, int h, int w){
-        // calculate value occurance in matrix (might use hash map) -- later
         ArrayList<Tuple2<Integer, Integer>> countPixel = new ArrayList<>();
         
         boolean found;
@@ -21,10 +20,12 @@ public class Entropy{
             for (int j = 0; j < w; j++){
                 found = false;
                 for (Tuple2<Integer, Integer> pixel : countPixel){
-                    if (pixel.getItem1().equals(matrix[i + rowTL][j + colTL])){
+
+                    if (pixel.getItem1() == matrix[i + rowTL][j + colTL]){
                         int pixelOcc = pixel.getItem2() + 1;
                         pixel.setItem2(pixelOcc);
                         found = true;
+                        break;
                     }
                 }
                 if (!found){
@@ -34,14 +35,17 @@ public class Entropy{
         }
 
         // find probability and entropy
-        double sum = 0.0;
-        int numOfPixel = countPixel.size();
+        double sum = 0;
+        int numOfPixel = w * h;
         for (int i = 0; i < h; i++){
             for (int j = 0; j < w; j++){
                 for (Tuple2<Integer, Integer> pixel : countPixel){
-                    if (pixel.getItem1().equals(matrix[i + rowTL][j + colTL])){
-                        double prob = pixel.getItem2() /  numOfPixel;
-                        sum += (prob * (Math.log(prob) / Math.log(2)));
+                    if (pixel.getItem1() == matrix[i + rowTL][j + colTL]){
+                        double prob = (double) pixel.getItem2() /  numOfPixel;
+                        if (prob > 0) {
+                            sum += (prob * (Math.log(prob) / Math.log(2)));
+                        }
+                        break;
                     }
                 }
             }

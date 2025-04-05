@@ -1,23 +1,20 @@
 package tools;
 
 public class MPD {
-    public static double computeMPD(int[][] red, int[][] green, int[][] blue){
-        double redMPD = computeMPDCanal(red);
-        double greenMPD = computeMPDCanal(green);
-        double blueMPD = computeMPDCanal(blue);
+    public static double computeMPD(int[][] red, int[][] green, int[][] blue, int rowTL, int colTL, int w, int h){
+        double redMPD = computeMPDCanal(red, rowTL, colTL, w, h);
+        double greenMPD = computeMPDCanal(green, rowTL, colTL, w, h);
+        double blueMPD = computeMPDCanal(blue, rowTL, colTL, w, h);
         
         return (redMPD + greenMPD + blueMPD)/3;
     }
 
-    public static double computeMPDCanal(int[][] matrix){
-        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+    public static double computeMPDCanal(int[][] matrix, int rowTL, int colTL, int w, int h){
+        if (matrix == null || w == 0 || h == 0) {
             return 0.0;
         }
         
-        int rows = matrix.length;
-        int cols = matrix[0].length;
-        
-        int[] result = findMinMax(matrix, 0, 0, rows - 1, cols - 1);
+        int[] result = findMinMax(matrix, rowTL, colTL, rowTL + h - 1, colTL + w - 1);
         int min = result[0];
         int max = result[1];
         

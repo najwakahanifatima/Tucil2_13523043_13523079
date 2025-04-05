@@ -1,24 +1,22 @@
 package tools;
 
 public class Variance {
-    public static double computeVariance(int[][] red, int[][] green, int[][] blue) {
-        double redVariance = computeVarianceCanal(red);
-        double greenVariance = computeVarianceCanal(green);
-        double blueVariance = computeVarianceCanal(blue);
+    public static double computeVariance(int[][] red, int[][] green, int[][] blue, int rowTL, int colTL, int w, int h) {
+        double redVariance = computeVarianceCanal(red, rowTL, colTL, w, h);
+        double greenVariance = computeVarianceCanal(green, rowTL, colTL, w, h);
+        double blueVariance = computeVarianceCanal(blue, rowTL, colTL, w, h);
         
         return (redVariance + greenVariance + blueVariance) / 3;
     }
     
-    public static double computeVarianceCanal(int[][] matrix) {
-        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+    public static double computeVarianceCanal(int[][] matrix, int rowTL, int colTL, int w, int h) {
+        if (matrix == null || w == 0 || h == 0) {
             return 0.0;
         }        
-        int rows = matrix.length;
-        int cols = matrix[0].length;
-        int N = rows * cols;
-        long sum = sum(matrix, 0, 0, rows - 1, cols - 1);
+        int N = w * h;
+        long sum = sum(matrix, rowTL, colTL, rowTL + h - 1, colTL + w - 1);
         double mean = (double) sum / N;
-        double jumlahSelisihKuadrat = helperVariance(matrix, mean, 0, 0, rows - 1, cols - 1);
+        double jumlahSelisihKuadrat = helperVariance(matrix, mean, rowTL, colTL, rowTL + h - 1, colTL + w - 1);
         
         return (double) jumlahSelisihKuadrat / N;
     }

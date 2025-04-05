@@ -1,4 +1,4 @@
-package tools;
+package errorMeasurement;
 
 public class Variance {
     public static double computeVariance(int[][] red, int[][] green, int[][] blue, int rowTL, int colTL, int w, int h) {
@@ -12,16 +12,25 @@ public class Variance {
     public static double computeVarianceCanal(int[][] matrix, int rowTL, int colTL, int w, int h) {
         if (matrix == null || w == 0 || h == 0) {
             return 0.0;
-        }        
+        }    
+        if (rowTL < 0 || colTL < 0 ||
+        rowTL + h > matrix.length ||
+        colTL + w > matrix[0].length) {
+        throw new IllegalArgumentException("Requested submatrix is out of bounds");
+        }
+            
         int N = w * h;
         long sum = sum(matrix, rowTL, colTL, rowTL + h - 1, colTL + w - 1);
         double mean = (double) sum / N;
         double jumlahSelisihKuadrat = helperVariance(matrix, mean, rowTL, colTL, rowTL + h - 1, colTL + w - 1);
         
-        return (double) jumlahSelisihKuadrat / N;
+        return jumlahSelisihKuadrat / N;
     }
     
     private static long sum(int[][] matrix, int startRow, int startCol, int endRow, int endCol) {
+        if (startRow > endRow || startCol > endCol) {
+            return 0;
+        }
         if (startRow == endRow && startCol == endCol) {
             return matrix[startRow][startCol];
         }
@@ -42,6 +51,9 @@ public class Variance {
     }
     
     private static double helperVariance(int[][] matrix, double mean, int startRow, int startCol, int endRow, int endCol) {
+        if (startRow > endRow || startCol > endCol) {
+            return 0;
+        }
         if (startRow == endRow && startCol == endCol) {
             double diff = matrix[startRow][startCol] - mean;
             return diff * diff;

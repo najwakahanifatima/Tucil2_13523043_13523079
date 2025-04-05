@@ -1,4 +1,4 @@
-package ImageHandler;
+package imageHandler;
 
 public class Matrix {
     private int[][] data;
@@ -61,19 +61,19 @@ public class Matrix {
         }
         return sum / (rows * cols);
     }
-    public double calculateRegionAverage(int startRow, int startCol, int numRows, int numCols) {
+    public int calculateRegionAverage(int startRow, int startCol, int numRows, int numCols) {
         if (startRow < 0 || startCol < 0 || 
             startRow + numRows > rows || startCol + numCols > cols) {
             throw new IndexOutOfBoundsException("Region indices out of bounds");
         }
         
-        double sum = 0;
+        int sum = 0;
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 sum += data[startRow + i][startCol + j];
             }
         }
-        return sum / (numRows * numCols);
+        return (int) sum / (numRows * numCols);
     }
     
     public int getRows() {

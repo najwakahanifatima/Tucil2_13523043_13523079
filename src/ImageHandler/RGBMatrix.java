@@ -1,4 +1,4 @@
-package ImageHandler;
+package imageHandler;
 
 public class RGBMatrix {
     private Matrix redMatrix;

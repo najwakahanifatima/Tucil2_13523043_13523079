@@ -35,11 +35,11 @@ public class Image {
     }
 
     public int[][] getGreen(){
-        return this.red;
+        return this.green;
     }
 
     public int[][] getBlue(){
-        return this.red;
+        return this.blue;
     }
 
     public static Image loadImage(String imagePath) throws IOException {
@@ -94,14 +94,14 @@ public class Image {
         int width = quadtree.getImage().getWidth();
         int[][] newRGBMatrix = new int[height][width];  
 
-        matrixFromQuadtree(quadtree.getRoot(), newRGBMatrix, 0, 0, height, width);
+        matrixFromQuadtree(quadtree.getRoot(), newRGBMatrix, height, width);
         return newRGBMatrix;
     }
 
-    public static void matrixFromQuadtree(Node node, int[][] newImage, int rowTL, int colTL, int h, int w){
+    public static void matrixFromQuadtree(Node node, int[][] newImage, int h, int w){
         if (node.getIsLeaf()){
-            for (int i = rowTL; i < rowTL + h; i++){
-                for (int j = colTL; j < colTL + w; j++){
+            for (int i = node.getPos().row; i < node.getPos().row + h; i++){
+                for (int j = node.getPos().col; j < node.getPos().col + w; j++){
                     int red = node.getRedValue() << 16;
                     int green = node.getGreenValue() << 8;
                     int blue = node.getBlueValue();
@@ -110,10 +110,10 @@ public class Image {
                 }
             }
         } else {
-            matrixFromQuadtree(node.getTopLeft(), newImage, rowTL, colTL, h/2, w/2);
-            matrixFromQuadtree(node.getTopRight(), newImage, rowTL, colTL + w/2, h/2, w/2);
-            matrixFromQuadtree(node.getBotLeft(), newImage, rowTL + h/2, colTL, h/2, w/2);
-            matrixFromQuadtree(node.getBotRight(), newImage, rowTL + h/2, colTL + w/2, h/2, w/2);
+            matrixFromQuadtree(node.getTopLeft(), newImage, h/2, w/2);
+            matrixFromQuadtree(node.getTopRight(), newImage, h/2, w/2);
+            matrixFromQuadtree(node.getBotLeft(), newImage, h/2, w/2);
+            matrixFromQuadtree(node.getBotRight(), newImage, h/2, w/2);
         }
     }
 }

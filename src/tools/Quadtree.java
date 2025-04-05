@@ -1,6 +1,5 @@
 package tools;
 import errorMeasurement.*;
-import imageHandler.Image;
 
 public class Quadtree {
     private final int method;
@@ -47,11 +46,15 @@ public class Quadtree {
             return node;
         }
 
-        Node nodeTL = checker(red, green, blue, rowTL, colTL, h/2, w/2);
-        Node nodeTR = checker(red, green, blue, rowTL, colTL + w/2, h/2, w/2);
-        Node nodeBL = checker(red, green, blue, rowTL + h/2, colTL, h/2, w/2);
-        Node nodeBR = checker(red, green, blue, rowTL + h/2, colTL + w/2, h/2, w/2);
+        int hHalf = h / 2;
+        int wHalf = w / 2;
+        int hRest = h - hHalf;
+        int wRest = w - wHalf;
 
+        Node nodeTL = checker(red, green, blue, rowTL, colTL, hHalf, wHalf);
+        Node nodeTR = checker(red, green, blue, rowTL, colTL + wHalf, hHalf, wRest);
+        Node nodeBL = checker(red, green, blue, rowTL + hHalf, colTL, hRest, wHalf);
+        Node nodeBR = checker(red, green, blue, rowTL + hHalf, colTL + wHalf, hRest, wRest);
         node.setTopLeft(nodeTL);
         node.setTopRight(nodeTR);
         node.setBotLeft(nodeBL);
@@ -86,6 +89,7 @@ public class Quadtree {
             case 4 -> {
                 // Entropy
                 value = Entropy.computeEntropy(red, green, blue, rowTL, colTL, h, w);
+                // System.out.println("value " + value);
                 break;
             }
             case 5 -> {
@@ -96,7 +100,7 @@ public class Quadtree {
             }
         }
 
-        return value >= threshold; //true if able to be divided
+        return value > threshold; //true if able to be divided
     }
 
     // might needed

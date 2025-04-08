@@ -125,6 +125,14 @@ public class Node {
         return this.pos;
     }
 
+    public int getNumRows(){
+        return this.height;
+    }
+
+    public int getNumCols(){
+        return this.width;
+    }
+
     public int getArea(){
         return this.height * this.width;
     }

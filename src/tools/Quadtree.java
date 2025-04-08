@@ -142,7 +142,7 @@ public class Quadtree {
         return this.root;
     }
 
-    public int getDepth(Node root){
+    public static int getDepth(Node root){
         if (root == null){
             return -1;
         }
@@ -155,7 +155,7 @@ public class Quadtree {
         return findMax(heightTL, heightTR, heightBL, heightBR) + 1;
     }
 
-    public int findMax(int hTL, int hTR, int hBL, int hBR){
+    public static int findMax(int hTL, int hTR, int hBL, int hBR){
         int max = hTL;
         if (hTR > max) { max = hTR; }
         if (hBL > max) { max = hBL; }

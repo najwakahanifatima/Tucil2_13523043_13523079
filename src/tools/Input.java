@@ -136,9 +136,23 @@ public class Input {
         return targetCompressionPercentage;
     }
     public static String readOutputPath(Scanner scanner) {
-        System.out.println("=================================================================");
-        System.out.print("Masukkan alamat absolut untuk gambar hasil kompresi: ");
-        return scanner.nextLine();
+        String outputPath;
+        
+        while (true) {
+            System.out.println("=================================================================");
+            System.out.print("Masukkan alamat absolut untuk output file hasil kompresi: ");
+            outputPath = scanner.nextLine();
+
+            if (!isAbsolutePath(outputPath)) {
+                System.out.println("Error: Harap masukkan alamat absolut!");
+                continue;
+            }
+            if (!isImageFile(outputPath)) {
+                System.out.println("Error: Alamat tidak valid! Gunakan format file gambar yang valid (.jpg, .jpeg, .png).\nSilakan masukkan kembali.");
+                continue;
+            }
+            return outputPath;
+        }
     }
 
     public static void displayWelcome() {
@@ -147,5 +161,5 @@ public class Input {
         System.out.println("=================================================================\n\n");
     }
     // display penjelasan program setelah displaywelcome
-    // display start prrogram and quit program
+    // display start program and quit program
 }

@@ -33,7 +33,7 @@ public class Input {
     }
 
     public static int readInputErrorMethod(Scanner scanner) {
-        String[] errorMethods = { "Variance", "Mean Absolute Deviation", "Max Pixel Difference", "Entropy" };
+        String[] errorMethods = { "Variance", "Mean Absolute Deviation", "Max Pixel Difference", "Entropy", "Structural Similarity Index" };
         int choice;
     
         while (true) {
@@ -47,7 +47,7 @@ public class Input {
             String input = scanner.nextLine().trim();
             try {
                 choice = Integer.parseInt(input);
-                if (choice >= 1 && choice <= 4) {
+                if (choice >= 1 && choice <= 5) {
                     return choice;
                 }
                 System.out.println("Error: Pilihan tidak valid! Silakan masukkan angka 1-4.");

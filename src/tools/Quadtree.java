@@ -41,7 +41,7 @@ public class Quadtree {
         Node node = new Node(avgRed, avgGreen, avgBlue, false, rowTL, colTL, h, w);
         this.numNode ++;
 
-        if (!isDivide(red, green, blue, rowTL, colTL, h, w)){ //stop dividing, current block becomes leaf
+        if (!isDivide(red, green, blue, rowTL, colTL, h, w, avgRed, avgGreen, avgBlue)){ //stop dividing, current block becomes leaf
             node.setIsLeaf(true);
             return node;
         }
@@ -63,7 +63,7 @@ public class Quadtree {
         return node;
     }
 
-    public boolean isDivide(int[][] red, int[][] green, int[][] blue, int rowTL, int colTL, int h, int w){
+    public boolean isDivide(int[][] red, int[][] green, int[][] blue, int rowTL, int colTL, int h, int w, int avgRed, int avgGreen, int avgBlue){
         double blockArea = w * h;
         double subBlockArea = (w/2) * (h/2);
 
@@ -77,6 +77,8 @@ public class Quadtree {
         switch (method){
             case 1 -> {
                 // variance
+                value = Variance.computeVariance(red, green, blue, rowTL, colTL, w, h);
+                break;
             }
             case 2 -> {
                 // MAD
@@ -85,15 +87,18 @@ public class Quadtree {
             }
             case 3 -> {
                 // MPD
+                value = MPD.computeMPD(red, green, blue, rowTL, colTL, w, h);
+                break;
             }
             case 4 -> {
                 // Entropy
                 value = Entropy.computeEntropy(red, green, blue, rowTL, colTL, h, w);
-                // System.out.println("value " + value);
                 break;
             }
             case 5 -> {
                 // SSIM (bonus)
+                value = SSIM.computeSSIM(red, green, blue, rowTL, colTL, h, w, avgRed, avgGreen, avgBlue);
+                break;
             }
             default -> {
                 // case dafault, didnt proceed

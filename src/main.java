@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
+import tools.GIF;
 import tools.Image;
 import tools.Input;
 import tools.Quadtree;
@@ -30,12 +31,15 @@ public class Main {
             // call quadtree algorithm
             Quadtree compressor = new Quadtree(errorMethod, threshold, minBlockSize, image);
             compressor.construct(image.getRed(), image.getGreen(), image.getBlue()); //this will set the root of quadtree
+            
+            // create compressed image
             BufferedImage newImage = image.getCompressedImage(compressor);
             ImageIO.write(newImage, "jpg", new File("compressed.jpg"));
 
+
             // result
             long endTime = System.currentTimeMillis();
-            long duration = endTime - startTime;         
+            long duration = endTime - startTime;     
 
             System.out.println("\n===================================================================");
             System.out.println("                    HASIL KOMPRESI                                ");
@@ -44,9 +48,15 @@ public class Main {
             // System.out.println("Ukuran gambar asli: " + stats.getOriginalSize() + " bytes");
             // System.out.println("Ukuran gambar terkompresi: " + stats.getCompressedSize() + " bytes");
             // System.out.printf("Persentase kompresi: %.2f%%\n", stats.getCompressionPercentage() * 100);
-            System.out.println("Kedalaman pohon: " + compressor.getDepth(compressor.getRoot()));
+            System.out.println("Kedalaman pohon: " + Quadtree.getDepth(compressor.getRoot()));
             System.out.println("Banyak simpul pada pohon: " + compressor.getNumberOfNode());
             // System.out.println("Gambar hasil kompresi disimpan di: " + outputImagePath);
+
+            System.out.println("Mau membuat GIF?");
+
+            // create GIF
+            String outputGIF = "compressed.gif";
+            GIF.makeGIF(compressor, outputGIF);
         
         } catch (IOException e) {
             System.out.println("Error compressing image: " + e.getMessage());

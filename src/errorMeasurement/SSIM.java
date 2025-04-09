@@ -4,9 +4,9 @@ public class SSIM {
     // not final yet (determining K1 K2 and W)
     public static double computeSSIM(int[][] red, int[][] green, int[][] blue, int rowTL, int colTL, int h, int w, int avgRed, int avgGreen, int avgBlue){
         // weight
-        double wRed = 0.30;
-        double wGreen = 0.59;
-        double WBlue = 0.11;
+        double wRed = 0.299;
+        double wGreen = 0.587;
+        double WBlue = 0.114;
 
         double ssimRed = computeSSIMCanal(red, rowTL, colTL, h, w, avgRed);
         double ssimGreen = computeSSIMCanal(green, rowTL, colTL, h, w, avgGreen);

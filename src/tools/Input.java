@@ -9,7 +9,7 @@ public class Input {
         String fileName;
 
         while (true) {
-            System.out.println("=================================================================");
+            // System.out.println("=================================================================");
             System.out.println("Masukkan alamat absolut file gambar yang ingin dikompresi: ");
             fileName = scanner.nextLine();
             File file = new File(fileName);
@@ -71,6 +71,7 @@ public class Input {
         }
         return false;
     }
+
     public static double readInputThreshold(Scanner scanner) {
         double threshold = 0.0;
         boolean validInput = false;
@@ -154,12 +155,43 @@ public class Input {
             return outputPath;
         }
     }
+    public static String readOutputGIFPath(Scanner scanner) {
+        String outputPath;
+        
+        while (true) {
+            System.out.println("=================================================================");
+            System.out.print("Masukkan alamat absolut untuk output file gif: ");
+            outputPath = scanner.nextLine();
 
+            if (!isAbsolutePath(outputPath)) {
+                System.out.println("Error: Harap masukkan alamat absolut!");
+                continue;
+            }
+            
+            if (!outputPath.toLowerCase().endsWith(".gif")) {
+                System.out.println("Error: Alamat tidak valid! Gunakan format file gambar yang valid (.gif).\nSilakan masukkan kembali.");
+                continue;
+            }
+            return outputPath;
+        }
+    }
+
+    public static boolean readOptionGIF(Scanner scanner) {
+        System.out.print("Mau membuat GIF? (y/n) ");
+        String option = scanner.next().trim().toLowerCase();
+        while (!option.equals("y") && !option.equals("n")) {
+            System.out.print("Pilihan tidak valid. Apakah ingin membuat GIF? (y/n): ");
+            option = scanner.next().trim().toLowerCase();
+        }
+        if(option.equals("y")){
+            return true;
+        }
+        return false;
+    }
+    
     public static void displayWelcome() {
         System.out.println("=================================================================");
         System.out.println("                    PROGRAM KOMPRESI GAMBAR                      ");
         System.out.println("=================================================================\n\n");
     }
-    // display penjelasan program setelah displaywelcome
-    // display start program and quit program
 }

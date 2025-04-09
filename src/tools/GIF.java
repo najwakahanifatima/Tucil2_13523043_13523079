@@ -45,7 +45,7 @@ public class GIF {
             }
             
             writer.close();
-            System.out.println("GIF telah dibuat! : " + outputName);
+            System.out.println("GIF telah dibuat!\nLetak file: " + outputName);
 
             // delete frames
             for (File frame : frameFiles) {

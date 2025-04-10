@@ -28,8 +28,8 @@ public class Quadtree {
     }
 
     public void construct(int[][] red, int[][] green, int[][] blue){
-        System.err.println("h image " + image.getHeight());
-        System.err.println("w image " + image.getWidth());
+        // System.err.println("h image " + image.getHeight());
+        // System.err.println("w image " + image.getWidth());
         Node quadtreeRoot = checker(red, green, blue, 0, 0, image.getHeight(), image.getWidth());
         this.root = quadtreeRoot;
     }

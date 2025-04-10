@@ -64,21 +64,8 @@ public class TargettedCompressor {
         long compressedSize = compressedFile.length();
 
         double currentCompressionRatio = 1.0 - ((double) compressedSize / originalSize);
-        System.out.println(originalSize);
-        System.out.println(compressedSize);
-        System.out.println(upperThreshold-lowerThreshold);
-        System.out.println("Iterasi 1: Threshold = " + 
-        String.format("%.2f", currentThreshold) + ", Jumlah Node = " + 
-        quadtree.getNumberOfNode() + ", Rasio Kompresi = " + 
-                            String.format("%.2f", currentCompressionRatio * 100) + "%");
         bestRatio = currentCompressionRatio;
                             
-        System.out.println("Threshold terbaik: " + String.format("%.2f", bestThreshold) + ", Rasio terbaik: " + String.format("%.2f", bestRatio * 100) + "%");
-        
-        if (Math.abs(currentCompressionRatio - targetCompression) <= TOLERANCE) {
-            done = true;
-        }
-
         if (currentCompressionRatio > targetCompression) {
             upperThreshold = currentThreshold;
             currentThreshold = (lowerThreshold + upperThreshold) / 2;
@@ -86,7 +73,6 @@ public class TargettedCompressor {
             lowerThreshold = currentThreshold;
             currentThreshold = (lowerThreshold + upperThreshold) / 2;
         }
-        
         for (int iteration = 2; iteration <= MAX_ITERATIONS; iteration++) {
             quadtree = new Quadtree(errorMethod, currentThreshold, minBlockSize, image);
             quadtree.construct(image.getRed(), image.getGreen(), image.getBlue());
@@ -97,23 +83,15 @@ public class TargettedCompressor {
             compressedSize = compressedFile.length();
 
             currentCompressionRatio = 1.0 - ((double) compressedSize / originalSize);
-            System.out.println(originalSize);
-            System.out.println(compressedSize);
-            System.out.println(upperThreshold-lowerThreshold);
-            System.out.println("Iterasi " + iteration + ": Threshold = " + 
-            String.format("%.2f", currentThreshold) + ", Jumlah Node = " + 
-            quadtree.getNumberOfNode() + ", Rasio Kompresi = " + 
-            String.format("%.2f", currentCompressionRatio * 100) + "%");
+
             if (Math.abs(currentCompressionRatio - targetCompression) < 
                 Math.abs(bestRatio - targetCompression)) {
                 bestThreshold = currentThreshold;
                 bestRatio = currentCompressionRatio;
             }
-                              
-            System.out.println("Threshold terbaik: " + String.format("%.2f", bestThreshold) + ", Rasio terbaik: " + String.format("%.2f", bestRatio * 100) + "%");
-            
+                                          
             // stop jika sudah cukup dekat dengan target
-            if (Math.abs(currentCompressionRatio - targetCompression) <= TOLERANCE) {
+            if (Math.abs(currentCompressionRatio - targetCompression) < TOLERANCE) {
                 break;
             }
 
@@ -159,7 +137,7 @@ public class TargettedCompressor {
         System.out.println("Banyak simpul pada pohon: " + finalQuadtree.getNumberOfNode());
         System.out.println("Gambar hasil kompresi disimpan di: \n" + outputPath);
         System.out.println("===================================================================");
-        if(Math.abs(compressionPercentage - targetCompression) > TOLERANCE){
+        if(Math.abs(compressionPercentage - (targetCompression*100)) > 0.01999){
             System.out.println("Note: hasil persentase kompresi tidak dapat memenuhi\ntarget kompresi karena tidak termasuk dalam range\npersentase kompresi yang dapat dilakukan pada file ini.");
             System.out.println("Hal ini dapat terjadi jika ukuran file image asli\nterlalu kecil atau terlalu besar.");
             System.out.println("===================================================================");

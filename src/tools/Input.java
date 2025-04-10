@@ -93,7 +93,7 @@ public class Input {
         return threshold;
     }
     
-    public static int readInputMinBlockSize(Scanner scanner) {
+    public static int readInputMinBlockSize(Scanner scanner, int imageBlockSize) {
         int minBlockSize = 0;
         boolean validInput = false;
         
@@ -102,8 +102,10 @@ public class Input {
             System.out.print("Masukkan ukuran blok minimum: ");
             try {
                 minBlockSize = Integer.parseInt(scanner.nextLine());
-                if (minBlockSize > 0) {
+                if (minBlockSize > 0 && minBlockSize <= imageBlockSize) {
                     validInput = true;
+                } else if (minBlockSize > imageBlockSize) {
+                    System.out.println("Input tidak valid. Ukuran blok minimum tidak boleh lebih besar dari ukuran gambar.");
                 } else {
                     System.out.println("Input tidak valid. Ukuran blok minimum harus lebih besar dari 0.");
                 }

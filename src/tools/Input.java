@@ -72,19 +72,57 @@ public class Input {
         return false;
     }
 
-    public static double readInputThreshold(Scanner scanner) {
+    public static double readInputThreshold(Scanner scanner ,  int errorMethod) {
         double threshold = 0.0;
         boolean validInput = false;
         
         while (!validInput) {
             System.out.println("=================================================================");
             System.out.print("Masukkan nilai ambang batas (threshold): ");
+            double upperRange = 0.0;
+            switch(errorMethod){
+                case 1:
+                    upperRange = 500;
+                    break;
+                case 2:
+                    upperRange = 255;
+                    break;
+                case 3:
+                    upperRange = 255;
+                    break;
+                case 4:
+                    upperRange = 255;    
+                    break;
+                case 5:
+                    upperRange = 1;
+                    break;
+            }
             try {
                 threshold = Double.parseDouble(scanner.nextLine());
-                if (threshold >= 0) {
+                if (threshold >= 0 && threshold <= upperRange) {
                     validInput = true;
-                } else {
+                } else if (threshold < 0) {
                     System.out.println("Input tidak valid. Masukkan nilai ambang batas positif.");
+                } else {
+                    System.out.println("Input tidak valid.");
+                    switch(errorMethod){
+                        case 1:
+                        System.out.println("Range threshold untuk metode Variance adalah 0-500");
+                        break;
+                        case 2:
+                        System.out.println("Nilai threshold untuk metode Mean Absolute Deviation adalah 0-255");
+                        break;
+                        case 3:
+                        System.out.println("Nilai threshold untuk metode Max Pixel Difference adalah 0-255");
+                        break;
+                        case 4:
+                        System.out.println("Nilai threshold untuk metode Entropy adalah 0-255");
+                        break;
+                        case 5:
+                        System.out.println("Nilai threshold untuk metode SSIM adalah 0.0-1.0");
+                        break;
+                    }
+                    System.out.println("Masukkan kembali threshold yang sesuai dengan range.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Input tidak valid. Masukkan nilai numerik.");

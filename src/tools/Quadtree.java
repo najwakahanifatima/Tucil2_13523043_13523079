@@ -98,13 +98,11 @@ public class Quadtree {
             case 5 -> {
                 // SSIM (bonus)
                 value = SSIM.computeSSIM(red, green, blue, rowTL, colTL, h, w, avgRed, avgGreen, avgBlue);
+                value = 1 - value;
+                // value range from 0 to 1, with 1 indicating greater similarity, so divide when its further from one
                 break;
             }
-            default -> {
-                // case dafault, didnt proceed
-            }
         }
-
         return value > threshold; //true if able to be divided
     }
 

@@ -9,8 +9,7 @@ import java.util.Scanner;
 public class TargettedCompressor {
     private static final double INITIAL_THRESHOLD = 10.0;
     private static final int MAX_ITERATIONS = 20;
-    private static final double TOLERANCE = 0.001;
-    private static double THRESHOLD_TOLERANCE = 0.01;
+    private static final double TOLERANCE = 0.0001;
 
     public static double compressWithTargetRatio(String imagePath, String outputPath, int errorMethod, int minBlockSize,
             double targetCompression) throws IOException {
@@ -31,31 +30,23 @@ public class TargettedCompressor {
                 upperThreshold = 500.0;
                 break;
             case 2:
-                // MAD
                 upperThreshold = 255.0;
                 break;
             case 3:
-                // MPD
                 upperThreshold = 255.0;
                 break;
             case 4:
-                // Entropy
                 upperThreshold = 255.0;
                 break;
             case 5:
-                // SSIM (bonus)
                 upperThreshold = 10.0;
                 currentThreshold = 1.0;
-                THRESHOLD_TOLERANCE = 0.000001;
-                break;
-            default:
-                // case default, didn't proceed
                 break;
         }
         double bestThreshold = currentThreshold;
         double bestRatio;
 
-        Quadtree quadtree = new Quadtree(errorMethod, currentThreshold, minBlockSize, image);
+        Quadtree quadtree = new Quadtree(errorMethod, currentThreshold, 1, image);
         quadtree.construct(image.getRed(), image.getGreen(), image.getBlue());
         BufferedImage compressedImage = image.getCompressedImage(quadtree);
         String extension = outputPath.substring(outputPath.lastIndexOf('.') + 1);
@@ -74,7 +65,7 @@ public class TargettedCompressor {
             currentThreshold = (lowerThreshold + upperThreshold) / 2;
         }
         for (int iteration = 2; iteration <= MAX_ITERATIONS; iteration++) {
-            quadtree = new Quadtree(errorMethod, currentThreshold, minBlockSize, image);
+            quadtree = new Quadtree(errorMethod, currentThreshold, 1, image);
             quadtree.construct(image.getRed(), image.getGreen(), image.getBlue());
             compressedImage = image.getCompressedImage(quadtree);
             extension = outputPath.substring(outputPath.lastIndexOf('.') + 1);
@@ -94,11 +85,6 @@ public class TargettedCompressor {
                 break;
             }
 
-            // stop jika upper dan lower threshold sama
-            if (upperThreshold - lowerThreshold < THRESHOLD_TOLERANCE) {
-                break;
-            }
-
             // sesuaikan threshold untuk iterasi berikutnya
             if (currentCompressionRatio > targetCompression) {
                 upperThreshold = currentThreshold;
@@ -109,7 +95,7 @@ public class TargettedCompressor {
             }
         }
 
-        Quadtree finalQuadtree = new Quadtree(errorMethod, bestThreshold, minBlockSize, image);
+        Quadtree finalQuadtree = new Quadtree(errorMethod, bestThreshold, 1, image);
         finalQuadtree.construct(image.getRed(), image.getGreen(), image.getBlue());
 
         BufferedImage finalCompressedImage = image.getCompressedImage(finalQuadtree);
@@ -121,11 +107,7 @@ public class TargettedCompressor {
         System.out.println("                    HASIL KOMPRESI                                ");
         System.out.println("===================================================================");
         System.out.println("Waktu eksekusi: " + duration + " ms");
-        if (errorMethod == 5) {
-            System.out.println("Threshold yang digunakan: " + String.format("%.5f", bestThreshold));
-        } else {
-            System.out.println("Threshold yang digunakan: " + String.format("%.2f", bestThreshold));
-        }
+        System.out.println("Threshold yang digunakan: " + String.format("%.5f", bestThreshold));
         System.out.println("Ukuran gambar asli: " + originalSize + " bytes");
 
         File originaFile = new File(imagePath);
@@ -140,12 +122,11 @@ public class TargettedCompressor {
         System.out.println("Banyak simpul pada pohon: " + finalQuadtree.getNumberOfNode());
         System.out.println("Gambar hasil kompresi disimpan di: \n" + outputPath);
         System.out.println("===================================================================");
-        if (Math.abs(compressionPercentage - (targetCompression * 100)) > 0.01999) {
-            System.out.println(
-               "Note: hasil persentase kompresi tidak dapat memenuhi target\npersentase kompresi yang diinginkan. Hal ini dapat terjadi");
-            System.out.println("karena faktor ukuran blok minimum yang sudah ditentukan sebelumnya.");
-            System.out.println("===================================================================");
+        System.out.println("Note: hasil persentase kompresi menggunakan toleransi 0.0001");
+        if (Math.abs(compressionPercentage - (targetCompression * 100)) > 0.01) {
+            System.out.println("Ketercapaian target persentase kompresi juga bergantung pada\nerror measurement method yang digunakan.");
         }
+        System.out.println("===================================================================");
         boolean makeGIF = Input.readOptionGIF(new Scanner(System.in));
         if (makeGIF) {
             String outputGIFPath = Input.readOutputGIFPath(new Scanner(System.in));

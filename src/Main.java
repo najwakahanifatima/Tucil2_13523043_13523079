@@ -9,7 +9,7 @@ import tools.Input;
 import tools.Quadtree;
 import tools.TargettedCompressor;
 
-public class Try {
+public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Input.displayWelcome();

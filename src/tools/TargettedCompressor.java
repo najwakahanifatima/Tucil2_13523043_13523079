@@ -103,7 +103,7 @@ public class TargettedCompressor {
 
         long endTime = System.currentTimeMillis();
         long duration = endTime - startTime;
-        System.out.println("\n===================================================================");
+        System.out.println("\n\n===================================================================");
         System.out.println("                    HASIL KOMPRESI                                ");
         System.out.println("===================================================================");
         System.out.println("Waktu eksekusi: " + duration + " ms");

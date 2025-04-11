@@ -26,14 +26,14 @@ public class SSIM {
 
         // calculate mean and store ke flat array
         int k = 0;
-        int sum = 0;
+        long sum = 0;
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
                 flatArray[k++] = matrix[i + rowTL][j + colTL];
                 sum += matrix[i + rowTL][j + colTL];
             }
         }
-        double meanX = sum / totElement;
+        double meanX = (double) sum / totElement;
 
         // calculate standard deviation
         double sumVar = 0;
@@ -51,3 +51,4 @@ public class SSIM {
         return denom / nom;
     }
 }
+

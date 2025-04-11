@@ -16,9 +16,9 @@ Program ini merupakan program sederhana berbasis Java yang mengimplementasikan *
    ```
    java -cp bin Main
    ```
-4. Jika melakukan perubahan pada kode program, compile ulanng dan jalankan run.bat
+4. Jika melakukan perubahan pada kode program, compile ulang dengan  menjalankan run.bat
    ```
-   .\run.bat
+   ./run.bat
    ```
 
 ## Alur Program

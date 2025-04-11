@@ -11,12 +11,13 @@ public class TargettedCompressor {
     private static final int MAX_ITERATIONS = 20;
     private static final double TOLERANCE = 0.001;
     private static double THRESHOLD_TOLERANCE = 0.01;
-    
-    public static double compressWithTargetRatio(String imagePath, String outputPath, int errorMethod, int minBlockSize, double targetCompression) throws IOException {
+
+    public static double compressWithTargetRatio(String imagePath, String outputPath, int errorMethod, int minBlockSize,
+            double targetCompression) throws IOException {
         if (targetCompression == 0.0) {
             return -1.0;
         }
-        
+
         long startTime = System.currentTimeMillis();
         Image image = Image.loadImage(imagePath);
         File inputFile = new File(imagePath);
@@ -45,7 +46,7 @@ public class TargettedCompressor {
                 // SSIM (bonus)
                 upperThreshold = 10.0;
                 currentThreshold = 1.0;
-                THRESHOLD_TOLERANCE = 0.00001;
+                THRESHOLD_TOLERANCE = 0.000001;
                 break;
             default:
                 // case default, didn't proceed
@@ -53,7 +54,6 @@ public class TargettedCompressor {
         }
         double bestThreshold = currentThreshold;
         double bestRatio;
-        boolean done;
 
         Quadtree quadtree = new Quadtree(errorMethod, currentThreshold, minBlockSize, image);
         quadtree.construct(image.getRed(), image.getGreen(), image.getBlue());
@@ -65,7 +65,7 @@ public class TargettedCompressor {
 
         double currentCompressionRatio = 1.0 - ((double) compressedSize / originalSize);
         bestRatio = currentCompressionRatio;
-                            
+
         if (currentCompressionRatio > targetCompression) {
             upperThreshold = currentThreshold;
             currentThreshold = (lowerThreshold + upperThreshold) / 2;
@@ -84,19 +84,18 @@ public class TargettedCompressor {
 
             currentCompressionRatio = 1.0 - ((double) compressedSize / originalSize);
 
-            if (Math.abs(currentCompressionRatio - targetCompression) < 
-                Math.abs(bestRatio - targetCompression)) {
+            if (Math.abs(currentCompressionRatio - targetCompression) < Math.abs(bestRatio - targetCompression)) {
                 bestThreshold = currentThreshold;
                 bestRatio = currentCompressionRatio;
             }
-                                          
+
             // stop jika sudah cukup dekat dengan target
             if (Math.abs(currentCompressionRatio - targetCompression) < TOLERANCE) {
                 break;
             }
 
             // stop jika upper dan lower threshold sama
-            if(upperThreshold - lowerThreshold < THRESHOLD_TOLERANCE){
+            if (upperThreshold - lowerThreshold < THRESHOLD_TOLERANCE) {
                 break;
             }
 
@@ -112,17 +111,21 @@ public class TargettedCompressor {
 
         Quadtree finalQuadtree = new Quadtree(errorMethod, bestThreshold, minBlockSize, image);
         finalQuadtree.construct(image.getRed(), image.getGreen(), image.getBlue());
-        
+
         BufferedImage finalCompressedImage = image.getCompressedImage(finalQuadtree);
         ImageIO.write(finalCompressedImage, extension, new File(outputPath));
-        
+
         long endTime = System.currentTimeMillis();
-        long duration = endTime - startTime;   
+        long duration = endTime - startTime;
         System.out.println("\n===================================================================");
         System.out.println("                    HASIL KOMPRESI                                ");
         System.out.println("===================================================================");
         System.out.println("Waktu eksekusi: " + duration + " ms");
-        System.out.println("Threshold yang digunakan: " + String.format("%.2f", bestThreshold));
+        if (errorMethod == 5) {
+            System.out.println("Threshold yang digunakan: " + String.format("%.5f", bestThreshold));
+        } else {
+            System.out.println("Threshold yang digunakan: " + String.format("%.2f", bestThreshold));
+        }
         System.out.println("Ukuran gambar asli: " + originalSize + " bytes");
 
         File originaFile = new File(imagePath);
@@ -132,14 +135,15 @@ public class TargettedCompressor {
         double compressionPercentage = (1.0 - ((double) compressedImageSize / originalFileSize)) * 100;
         System.out.println("Ukuran gambar terkompresi: " + compressedImageSize + " bytes");
         System.out.printf("Persentase kompresi: %.2f%%\n", compressionPercentage);
-        
+
         System.out.println("Kedalaman pohon: " + Quadtree.getDepth(finalQuadtree.getRoot()));
         System.out.println("Banyak simpul pada pohon: " + finalQuadtree.getNumberOfNode());
         System.out.println("Gambar hasil kompresi disimpan di: \n" + outputPath);
         System.out.println("===================================================================");
-        if(Math.abs(compressionPercentage - (targetCompression*100)) > 0.01999){
-            System.out.println("Note: hasil persentase kompresi tidak dapat memenuhi\ntarget kompresi karena tidak termasuk dalam range\npersentase kompresi yang dapat dilakukan pada file ini.");
-            System.out.println("Hal ini dapat terjadi jika ukuran file image asli\nterlalu kecil atau terlalu besar.");
+        if (Math.abs(compressionPercentage - (targetCompression * 100)) > 0.01999) {
+            System.out.println(
+               "Note: hasil persentase kompresi tidak dapat memenuhi target\npersentase kompresi yang diinginkan. Hal ini dapat terjadi");
+            System.out.println("karena faktor ukuran blok minimum yang sudah ditentukan sebelumnya.");
             System.out.println("===================================================================");
         }
         boolean makeGIF = Input.readOptionGIF(new Scanner(System.in));
@@ -148,7 +152,7 @@ public class TargettedCompressor {
             GIF.makeGIF(finalQuadtree, outputGIFPath);
         }
         System.out.println("===================================================================");
-        
+
         return bestRatio;
     }
 }

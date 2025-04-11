@@ -122,7 +122,6 @@ public class Input {
                         System.out.println("Nilai threshold untuk metode SSIM adalah 0.0-1.0");
                         break;
                     }
-                    System.out.println("Masukkan kembali threshold yang sesuai dengan range.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Input tidak valid. Masukkan nilai numerik.");

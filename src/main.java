@@ -18,7 +18,6 @@ public class Main {
         String inputImagePath = Input.readInputPath();
         int errorMethod = Input.readInputErrorMethod(scanner);
         double threshold = Input.readInputThreshold(scanner, errorMethod);
-        System.err.println("threshold: " + threshold);
         try{
             Image image = Image.loadImage(inputImagePath);
             int maxBlockSize = Math.min(image.getWidth(), image.getHeight());

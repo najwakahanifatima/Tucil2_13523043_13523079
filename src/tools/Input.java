@@ -9,7 +9,7 @@ public class Input {
         String fileName;
 
         while (true) {
-            System.out.println("=================================================================");
+            // System.out.println("=================================================================");
             System.out.println("Masukkan alamat absolut file gambar yang ingin dikompresi: ");
             fileName = scanner.nextLine();
             File file = new File(fileName);
@@ -71,19 +71,57 @@ public class Input {
         }
         return false;
     }
-    public static double readInputThreshold(Scanner scanner) {
+
+    public static double readInputThreshold(Scanner scanner ,  int errorMethod) {
         double threshold = 0.0;
         boolean validInput = false;
         
         while (!validInput) {
             System.out.println("=================================================================");
             System.out.print("Masukkan nilai ambang batas (threshold): ");
+            double upperRange = 0.0;
+            switch(errorMethod){
+                case 1:
+                    upperRange = 500;
+                    break;
+                case 2:
+                    upperRange = 255;
+                    break;
+                case 3:
+                    upperRange = 255;
+                    break;
+                case 4:
+                    upperRange = 255;    
+                    break;
+                case 5:
+                    upperRange = 1;
+                    break;
+            }
             try {
                 threshold = Double.parseDouble(scanner.nextLine());
-                if (threshold >= 0) {
+                if (threshold >= 0 && threshold <= upperRange) {
                     validInput = true;
-                } else {
+                } else if (threshold < 0) {
                     System.out.println("Input tidak valid. Masukkan nilai ambang batas positif.");
+                } else {
+                    System.out.println("Input tidak valid.");
+                    switch(errorMethod){
+                        case 1:
+                        System.out.println("Range threshold untuk metode Variance adalah 0-500");
+                        break;
+                        case 2:
+                        System.out.println("Nilai threshold untuk metode Mean Absolute Deviation adalah 0-255");
+                        break;
+                        case 3:
+                        System.out.println("Nilai threshold untuk metode Max Pixel Difference adalah 0-255");
+                        break;
+                        case 4:
+                        System.out.println("Nilai threshold untuk metode Entropy adalah 0-255");
+                        break;
+                        case 5:
+                        System.out.println("Nilai threshold untuk metode SSIM adalah 0.0-1.0");
+                        break;
+                    }
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Input tidak valid. Masukkan nilai numerik.");
@@ -92,7 +130,7 @@ public class Input {
         return threshold;
     }
     
-    public static int readInputMinBlockSize(Scanner scanner) {
+    public static int readInputMinBlockSize(Scanner scanner, int imageBlockSize) {
         int minBlockSize = 0;
         boolean validInput = false;
         
@@ -101,8 +139,10 @@ public class Input {
             System.out.print("Masukkan ukuran blok minimum: ");
             try {
                 minBlockSize = Integer.parseInt(scanner.nextLine());
-                if (minBlockSize > 0) {
+                if (minBlockSize > 0 && minBlockSize <= imageBlockSize) {
                     validInput = true;
+                } else if (minBlockSize > imageBlockSize) {
+                    System.out.println("Input tidak valid. Ukuran blok minimum tidak boleh lebih besar dari ukuran gambar.");
                 } else {
                     System.out.println("Input tidak valid. Ukuran blok minimum harus lebih besar dari 0.");
                 }
@@ -136,16 +176,61 @@ public class Input {
         return targetCompressionPercentage;
     }
     public static String readOutputPath(Scanner scanner) {
-        System.out.println("=================================================================");
-        System.out.print("Masukkan alamat absolut untuk gambar hasil kompresi: ");
-        return scanner.nextLine();
+        String outputPath;
+        
+        while (true) {
+            System.out.println("=================================================================");
+            System.out.print("Masukkan alamat absolut untuk output file hasil kompresi: ");
+            outputPath = scanner.nextLine();
+
+            if (!isAbsolutePath(outputPath)) {
+                System.out.println("Error: Harap masukkan alamat absolut!");
+                continue;
+            }
+            if (!isImageFile(outputPath)) {
+                System.out.println("Error: Alamat tidak valid! Gunakan format file gambar yang valid (.jpg, .jpeg, .png).\nSilakan masukkan kembali.");
+                continue;
+            }
+            return outputPath;
+        }
+    }
+    public static String readOutputGIFPath(Scanner scanner) {
+        String outputPath;
+        
+        while (true) {
+            System.out.println("=================================================================");
+            System.out.print("Masukkan alamat absolut untuk output file gif: ");
+            outputPath = scanner.nextLine();
+
+            if (!isAbsolutePath(outputPath)) {
+                System.out.println("Error: Harap masukkan alamat absolut!");
+                continue;
+            }
+            
+            if (!outputPath.toLowerCase().endsWith(".gif")) {
+                System.out.println("Error: Alamat tidak valid! Gunakan format file gambar yang valid (.gif).\nSilakan masukkan kembali.");
+                continue;
+            }
+            return outputPath;
+        }
     }
 
+    public static boolean readOptionGIF(Scanner scanner) {
+        System.out.print("Mau membuat GIF? (y/n) ");
+        String option = scanner.next().trim().toLowerCase();
+        while (!option.equals("y") && !option.equals("n")) {
+            System.out.print("Pilihan tidak valid. Apakah ingin membuat GIF? (y/n): ");
+            option = scanner.next().trim().toLowerCase();
+        }
+        if(option.equals("y")){
+            return true;
+        }
+        return false;
+    }
+    
     public static void displayWelcome() {
         System.out.println("=================================================================");
         System.out.println("                    PROGRAM KOMPRESI GAMBAR                      ");
         System.out.println("=================================================================\n\n");
     }
-    // display penjelasan program setelah displaywelcome
-    // display start prrogram and quit program
 }

@@ -12,7 +12,7 @@ public class SSIM {
         double ssimGreen = computeSSIMCanal(green, rowTL, colTL, h, w, avgGreen);
         double ssimBlue = computeSSIMCanal(blue, rowTL, colTL, h, w, avgBlue);
 
-        return Math.round((wRed * ssimRed) + (wGreen * ssimGreen) + (WBlue * ssimBlue));
+        return ((wRed * ssimRed) + (wGreen * ssimGreen) + (WBlue * ssimBlue));
     }
     
     public static double computeSSIMCanal(int[][] matrix, int rowTL, int colTL, int h, int w, int avgColor){
@@ -26,28 +26,30 @@ public class SSIM {
 
         // calculate mean and store ke flat array
         int k = 0;
-        int sum = 0;
+        long sum = 0;
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < w; j++) {
                 flatArray[k++] = matrix[i + rowTL][j + colTL];
                 sum += matrix[i + rowTL][j + colTL];
             }
         }
-        double meanX = sum / totElement;
+        double meanX = (double) sum / totElement;
 
         // calculate standard deviation
         double sumVar = 0;
         double cov = 0; // because y is constant
         double varY = 0; 
         for (int pixel : flatArray){
-            sumVar += (pixel - meanX);
+            double diffX = pixel - meanX;
+            sumVar += diffX * diffX;
         }
         double varX = sumVar / (totElement - 1);
 
         // calculate ssim
         double denom = ((2 * meanX * avgColor) + C1) * ((2 * cov) + C2);
-        double nom = (Math.pow(meanX,2) + Math.pow(avgColor, 2) + C1) * (Math.pow(varX, 2) + Math.pow(varY,2) + C2);
+        double nom = (Math.pow(meanX,2) + Math.pow(avgColor, 2) + C1) * (varX + varY + C2);
 
         return denom / nom;
     }
 }
+
